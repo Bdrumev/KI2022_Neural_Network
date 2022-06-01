@@ -19,4 +19,7 @@ public class Network {
 
     public void train() {
     }
+    public void forward() {
+
+    }
 }
