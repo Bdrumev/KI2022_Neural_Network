@@ -13,8 +13,9 @@ public class Main {
             HiddenLayer[i] = Einlesen.nextInt();
         }
 
-        Network Test = new Network(3, HiddenLayer, 5);
+        Network Test = new Network(2, HiddenLayer, 2);
 
-        Test.train();
+        double[][] Testdaten = {{0.2,0.3,1,1},{0.2,0.3,1,1},{0.1,0.7,1,0}};
+        Test.train(Testdaten, 1);
     }
 }

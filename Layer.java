@@ -1,22 +1,20 @@
 public class Layer {
     public Neuron[] neuronen;
-    float[] weights;
 
     //Nur Hidden und OutputLayer
-    public Layer(int AnzahlWeights, int AnzahlNeuronen) {
+    public Layer(int AnzahlInputs, int AnzahlNeuronen) {
         this.neuronen = new Neuron[AnzahlNeuronen];
-        this.weights = new float[AnzahlWeights];
 
-        for (Neuron currentNeuron : neuronen) {
-            new Neuron();
+        for (int current = 0; current < neuronen.length; current++) {
+            neuronen[current] = new Neuron(AnzahlInputs);
         }
-
     }
 
-    public Layer(int input) {
-        this.neuronen = new Neuron[input];
-        for (Neuron currentNeuron : neuronen) {
-            new Neuron();
+    //InputLayer
+    public Layer(int AnzahlNeuronen) {
+        this.neuronen = new Neuron[AnzahlNeuronen];
+        for (int current = 0; current < neuronen.length; current++) {
+            neuronen[current] = new Neuron();
         }
     }
 }
