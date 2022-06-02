@@ -34,7 +34,7 @@ public class Network {
     }
 
     public void Forward(double[] input) {
-        double[] output;
+        double[] output = null;
         Neuron n;
 
         for (int Schicht = 1; Schicht < layers.length; Schicht++) {
@@ -45,23 +45,26 @@ public class Network {
                 output[i] = n.AktivierungsFunktion(n.Eingabefunktion(input));
             }
             input = output;
+
         }
 
+        for (double out:output) {
+            System.out.println(out);
+        }
     }
 
     private void Backward(double[] targets) {
         Layer OutputLayer = layers[layers.length-1];
+        int Anzahl;
 
-        int Anzahl = 0;
+        //Backpropagation OutputLayer
         double[] Fehler = new double[layers.length];
-
-
         for (int i = 0; i < OutputLayer.getSize(); i++) {
             Fehler[layers.length - 1] += InverseSigmoid(OutputLayer.neuronen[i].Inputs) * (targets[i] - OutputLayer.neuronen[i].getOutput());
-            Anzahl++;
         }
-        Fehler[layers.length - 1] /= Anzahl;
+        Fehler[layers.length - 1] /= OutputLayer.getSize();
 
+        //Backpropagation HiddenLayer
         for (int L = layers.length - 2; L > 0; L--) {
             Anzahl = 0;
             for (int i = 0; i < layers[L].getSize() - 1; i++) {
@@ -77,22 +80,16 @@ public class Network {
 
         //updateWeights
         for (int L = 1; L < layers.length; L++) {
-            System.out.println("Layer " + L);
             for (int K = 0; K < layers[L].getSize(); K++) {
-                System.out.println("Knoten " + K);
                 Neuron N = layers[L].neuronen[K];
                 for (int w = 0; w < N.weights.length; w++) {
-                    System.out.println("Vorher "+ N.weights[w]);
-                    System.out.println(Fehler[L]);
                     N.weights[w] = N.weights[w] + alpha*N.getOutput()*Fehler[L];
-                    System.out.println(" Danach " + N.weights[w]);
                 }
             }
         }
     }
 
     private double InverseSigmoid(double in) {
-        //TODO
-        return in;
+        return (1/(1+Math.exp(-in)))*(1-(1/(1+Math.exp(-in))));
     }
 }

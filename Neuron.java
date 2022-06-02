@@ -1,3 +1,5 @@
+import java.util.concurrent.ThreadLocalRandom;
+
 public class Neuron {
     double[] weights;
     double Inputs;
@@ -6,18 +8,12 @@ public class Neuron {
         weights = new double[AnzahlWeights];
 
         for (int i = 0; i < weights.length; i++) {
-            weights[i] = (Math.random()*2)-1;
+            weights[i] = ThreadLocalRandom.current().nextDouble(-1,1);
         }
     }
 
     public Neuron() {
 
-    }
-
-    private void updateWeights(Layer prevLayer) {
-        for (int n = 0; n < prevLayer.neuronen.length; n++) {
-            System.out.println("Updated");
-        }
     }
 
     public double Eingabefunktion(double[] eingang) {

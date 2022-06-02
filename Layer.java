@@ -2,7 +2,6 @@ import java.util.Arrays;
 
 public class Layer {
     public Neuron[] neuronen;
-    private int size;
 
     //Nur Hidden und OutputLayer
     public Layer(int AnzahlInputs, int AnzahlNeuronen) {
@@ -13,10 +12,6 @@ public class Layer {
         }
     }
 
-    public int getSize(){
-        return neuronen.length;
-    }
-
     //InputLayer
     public Layer(int AnzahlNeuronen) {
         this.neuronen = new Neuron[AnzahlNeuronen];
@@ -24,4 +19,8 @@ public class Layer {
             neuronen[current] = new Neuron();
         }
     }
+    public int getSize(){
+        return neuronen.length;
+    }
+
 }
