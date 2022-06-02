@@ -1,7 +1,7 @@
 public class Neuron {
     double[] weights;
-    int Inputs;
-    double bias;
+    double Inputs;
+    double bias, Output;
     public Neuron(int AnzahlWeights) {
         weights = new double[AnzahlWeights];
 
@@ -20,18 +20,21 @@ public class Neuron {
         }
     }
 
-    public double AktivierungsFunktion(double in) {
-        //Sollte Sidmoid sein
-        return 1/(1+Math.exp(-10*in));
-    }
     public double Eingabefunktion(double[] eingang) {
         double result = 0.0;
-
         for (int i = 0; i < weights.length; i++) {
             result += weights[i]*eingang[i];
         }
-        System.out.println(result+bias);
-        return result+bias;
+        Inputs =(result+bias);
+        return Inputs;
     }
 
+    public double AktivierungsFunktion(double in) {
+        //Sollte Sidmoid sein
+        Output = 1/(1+Math.exp(-in));
+        return Output;
+    }
+    public double getOutput() {
+        return Output;
+    }
 }
