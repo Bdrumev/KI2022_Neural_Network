@@ -2,7 +2,7 @@ import java.util.Arrays;
 
 public class Network {
     static Layer[] layers;
-    static double alpha = 0.5;
+    static double alpha = 0.5;	//Lernrate
 
     public Network(int InputKnoten, int[] HiddenKnoten, int OutputKnoten) {
         int HiddenLayerAnzahl = HiddenKnoten.length;
@@ -55,41 +55,61 @@ public class Network {
 
     private void Backward(double[] targets) {
         Layer OutputLayer = layers[layers.length-1];
-        int Anzahl;
-
+        int outL = layers.length-1;
+        double[][] delta;
+        
+        delta = new double[layers.length][];
+    	delta[outL] = new double[OutputLayer.getSize()];
+    	
         //Backpropagation OutputLayer
-        double[] Fehler = new double[layers.length];
-        for (int i = 0; i < OutputLayer.getSize(); i++) {
-            Fehler[layers.length - 1] += InverseSigmoid(OutputLayer.neuronen[i].Inputs) * (targets[i] - OutputLayer.neuronen[i].getOutput());
+        for(int k = 0; k < OutputLayer.getSize(); k++) {
+        	Neuron N = OutputLayer.neuronen[k];
+        	delta[outL][k] = (targets[k] - N.getOutput())*InverseSigmoid(N.Inputs);
         }
-        Fehler[layers.length - 1] /= OutputLayer.getSize();
-
+        
         //Backpropagation HiddenLayer
-        for (int L = layers.length - 2; L > 0; L--) {
-            Anzahl = 0;
-            for (int i = 0; i < layers[L].getSize() - 1; i++) {
-                double delta = 0;
-                for (int j = 0; j < layers[L].neuronen[i].weights.length - 1 ; j++) {
-                    delta += layers[L].neuronen[i].weights[j] * Fehler[L+1];
-                }
-                Fehler[L] += InverseSigmoid(layers[L].neuronen[i].Inputs) * delta;
-                Anzahl++;
-            }
-            Fehler[L] /= Anzahl;
+        for(int L = layers.length - 2; L > 0; L--) {	//je Hidden Layer L, rückwärts
+        	delta[L] = new double[layers[L].getSize()];
+        	
+        	if(true) {	//Schwellwert nicht erreicht: Bias-Abhängigkeit
+	        	for(int i = 0; i < layers[L].getSize() - 1; i++) { //je Neuron i
+	        		double sum = 0.0;
+		        	for(int j =0; j<layers[L].neuronen[i].weights.length -1; j++) { //pro Gewicht im Knoten i
+		        		//delta[j] = g'(in[j])*Summe(w[j][k]*delta[k]); k-Knoten i.d. Ausgabeschicht
+		        		sum = delta[L][j]*layers[L].neuronen[i].weights[j];
+		        	}
+		        	delta[L][i] = InverseSigmoid(layers[L].neuronen[i].Inputs)*sum;
+	        	}
+        	}
         }
 
         //updateWeights
-        for (int L = 1; L < layers.length; L++) {
-            for (int K = 0; K < layers[L].getSize(); K++) {
+        for (int L = 1; L < layers.length; L++) { //je Layer
+            for (int K = 0; K < layers[L].getSize(); K++) { // je Neuron im Layer
                 Neuron N = layers[L].neuronen[K];
-                for (int w = 0; w < N.weights.length; w++) {
-                    N.weights[w] = N.weights[w] + alpha*N.getOutput()*Fehler[L];
+                for (int w = 0; w < N.weights.length; w++) { // Gewichte
+                    N.weights[w] = N.weights[w] + alpha*N.getOutput()*delta[L][K];
                 }
+                
             }
         }
+        
+        //updateBiases
+        for (int L = 1; L < layers.length; L++) { //je Layer
+            for (int K = 0; K < layers[L].getSize(); K++) { // je Neuron im Layer
+                Neuron N = layers[L].neuronen[K];
+                N.updateBias(alpha*delta[L][K]);  //b=b+alpha*delta
+            }
+        }
+        
+        
+        
+        
     }
 
-    private double InverseSigmoid(double in) {
+    private double InverseSigmoid(double in) { //g'(x)
         return (1/(1+Math.exp(-in)))*(1-(1/(1+Math.exp(-in))));
     }
+    
+    
 }

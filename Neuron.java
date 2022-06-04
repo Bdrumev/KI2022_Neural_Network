@@ -10,6 +10,8 @@ public class Neuron {
         for (int i = 0; i < weights.length; i++) {
             weights[i] = ThreadLocalRandom.current().nextDouble(-1,1);
         }
+        
+        bias = ThreadLocalRandom.current().nextDouble(0,1);
     }
 
     public Neuron() {
@@ -32,5 +34,8 @@ public class Neuron {
     }
     public double getOutput() {
         return Output;
+    }
+    public void updateBias(double correction) {
+    	bias = bias + correction;
     }
 }

@@ -17,7 +17,7 @@ public class Main {
         //,{0.2,0.3,1,1},{0.1,0.7,1,0}
         double[][] Trainingsdaten = Einlesen.einlesenDia();
         double[][] Testdaten = {{0.2,0.3,1,1},{0.2,0.3,1,1},{0.1,0.7,1,0}};
-        Test.train(Trainingsdaten, 100);
+        Test.train(Trainingsdaten, 500);
         //Test.validate(Daten);
     }
 }
