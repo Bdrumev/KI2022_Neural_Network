@@ -42,7 +42,7 @@ public class Network {
 
             for (int i = 0; i < layers[Schicht].neuronen.length; i++) {
                 n = layers[Schicht].neuronen[i];
-                output[i] = n.AktivierungsFunktion(n.Eingabefunktion(input));
+                output[i] = n.AktivierungsFunktion(n.Eingabefunktion(input)+n.bias);
             }
             input = output;
 
@@ -75,7 +75,7 @@ public class Network {
 	        	for(int i = 0; i < layers[L].getSize() - 1; i++) { //je Neuron i
 	        		double sum = 0.0;
 		        	for(int j =0; j<layers[L].neuronen[i].weights.length -1; j++) { //pro Gewicht im Knoten i
-		        		//delta[j] = g'(in[j])*Summe(w[j][k]*delta[k]); k-Knoten i.d. Ausgabeschicht
+		        		//im Vorlesung: delta[j] = g'(in[j])*Summe(w[j][k]*delta[k]); k-Knoten i.d. Ausgabeschicht
 		        		sum = delta[L][j]*layers[L].neuronen[i].weights[j];
 		        	}
 		        	delta[L][i] = InverseSigmoid(layers[L].neuronen[i].Inputs)*sum;
