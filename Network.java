@@ -2,7 +2,7 @@ import java.util.Arrays;
 
 public class Network {
     static Layer[] layers;
-    static double alpha = 0.55;	//Lernrate
+    static double alpha = 0.5;	//Lernrate
 
     public Network(int InputKnoten, int[] HiddenKnoten, int OutputKnoten) {
         int HiddenLayerAnzahl = HiddenKnoten.length;
@@ -16,20 +16,22 @@ public class Network {
             lastLayerAnzahl = HiddenKnoten[i - 1];
         }
         layers[gesamtLayerAnzahl - 1] = new Layer(lastLayerAnzahl, OutputKnoten);
-        System.out.println("Done!");
+        System.out.println("Created Network");
 
     }
 
     public void train(double[][] Trainingsdaten, int epochen) {
         int epoche = 0;
+        double correct;
+        double falsch;
         do {
-        	int correct = 0;
-                	int falsch = 0;
+        	correct = 0;
+            falsch = 0;
             for (double[] input : Trainingsdaten) {
                 double[] erg = Forward(input);
                 double[] target = Arrays.copyOfRange(input, input.length-layers[layers.length-1].neuronen.length,input.length);
                 for(int i = 0; i < erg.length; i++) {
-                	System.out.println(erg[i] + " " + target[i]);
+                	//System.out.println(erg[i] + " " + target[i]);
                 	
                 	if (Math.round(erg[i]) == target[i]) {
                 		correct++;
@@ -40,7 +42,8 @@ public class Network {
                 }
                 Backward(target);
             }
-            System.out.println("Richtig: " + correct + " Falsch: " + falsch);
+            double n = correct/(correct+falsch);
+            System.out.println(n);
             epoche++;
         } while (epoche < epochen);
 
@@ -93,30 +96,20 @@ public class Network {
         	
         }
 
-        //updateWeights
+
         for (int L = 1; L < layers.length; L++) { //je Layer
             for (int K = 0; K < layers[L].getSize(); K++) { // je Neuron im Layer
                 Neuron N = layers[L].neuronen[K];
-                
+                //updateWeights
                 for (int w = 0; w < N.weights.length; w++) { // Gewichte
                 	Neuron M = layers[L-1].neuronen[w];
-                    N.weights[w] = N.weights[w] + alpha*M.getOutput()*delta[L][K];
+                    N.weights[w] += alpha*M.getOutput()*delta[L][K];
                 }
-                
+
+                //updateBias
+                N.bias += (alpha*delta[L][K]);  //b=b+alpha*delta
             }
         }
-        
-        //updateBiases
-        for (int L = 1; L < layers.length; L++) { //je Layer
-            for (int K = 0; K < layers[L].getSize(); K++) { // je Neuron im Layer
-                Neuron N = layers[L].neuronen[K];
-                N.updateBias(alpha*delta[L][K]);  //b=b+alpha*delta
-            }
-        }
-        
-        
-        
-        
     }
 
     private double InverseSigmoid(double in) { //g'(x)
