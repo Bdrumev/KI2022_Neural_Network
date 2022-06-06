@@ -1,6 +1,10 @@
 import java.util.Scanner;
 
 public class Main {
+
+    static int inputKnoten = 8;
+    static int outputKnoten = 1;
+
     public static void main(String[] args) {
         Scanner KonsoleScanner = new Scanner(System.in);
         System.out.print("Anzahl HiddenLayers: ");
@@ -11,13 +15,13 @@ public class Main {
             System.out.print("Neuronenanzahl in Layer " + (i+1) + ": ");
             HiddenLayer[i] = KonsoleScanner.nextInt();
         }
+        System.out.println("Anzahl Epochen: ");
+        int epochen = KonsoleScanner.nextInt();
 
-        Network Test = new Network(8, HiddenLayer, 1);
+        Network Test = new Network(inputKnoten, HiddenLayer, outputKnoten);
 
-        //,{0.2,0.3,1,1},{0.1,0.7,1,0}
         double[][] Trainingsdaten = Einlesen.einlesenDia();
-        double[][] Testdaten = {{0.2,0.3,1,1},{0.2,0.3,1,1},{0.1,0.7,1,0}};
-        Test.train(Trainingsdaten, 500);
-        //Test.validate(Daten);
+        Test.train(Trainingsdaten, epochen);
+        Test.evaluierenDiabetes(Trainingsdaten);
     }
 }

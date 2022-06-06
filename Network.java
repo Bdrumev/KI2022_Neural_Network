@@ -42,8 +42,8 @@ public class Network {
                 }
                 Backward(target);
             }
-            double n = correct/(correct+falsch);
-            System.out.println(n);
+            //double n = correct/(correct+falsch);
+            //System.out.println(n);
             epoche++;
         } while (epoche < epochen);
 
@@ -114,6 +114,75 @@ public class Network {
 
     private double InverseSigmoid(double in) { //g'(x)
         return (1/(1+Math.exp(-in)))*(1-(1/(1+Math.exp(-in))));
+    }
+
+    public void evaluierenDiabetes(double[][] liste) {
+        int falschPositiv  = 0;
+        int falschNegativ  = 0;
+        int richtigPositiv = 0;
+        int richtigNegativ = 0;
+        int anzahlPositiv  = 0;
+        int anzahlNegativ  = 0;
+        int n = liste[0].length-1;
+
+        double[] ergebnis = new double[12];
+
+        for (double[] doubles : liste) {
+
+            double out = Forward(doubles)[0];
+            double y = doubles[n];
+
+
+            if (Math.round(out) == 0 && Math.round(y) == 1) {
+                falschNegativ++;
+                anzahlPositiv++;
+            } else if (Math.round(out) == 1 && Math.round(y) == 1) {
+                richtigPositiv++;
+                anzahlPositiv++;
+            } else if (Math.round(out) == 1 && Math.round(y) == 0) {
+                falschPositiv++;
+                anzahlNegativ++;
+            } else if (Math.round(out) == 0 && Math.round(y) == 0) {
+                richtigNegativ++;
+                anzahlNegativ++;
+            } else {
+                System.out.println("Error0 in Auswertung");
+            }
+        }
+        if(anzahlPositiv != richtigPositiv+falschNegativ)System.out.println("Error1 in Auswertung");
+        if(anzahlNegativ != richtigNegativ+falschPositiv)System.out.println("Error2 in Auswertung");
+        if(anzahlPositiv+anzahlNegativ != liste.length)System.out.println("Error3 in Auswertung");
+
+
+        ergebnis[0] = liste.length;
+        ergebnis[1] = anzahlPositiv;
+        ergebnis[2] = anzahlNegativ;
+        ergebnis[3] = (double)anzahlPositiv/(double)liste.length;
+        ergebnis[4] = (double)anzahlNegativ/(double)liste.length;
+        ergebnis[5] = (double)(richtigPositiv+richtigNegativ)/(double)liste.length;
+        ergebnis[6] = richtigPositiv;
+        ergebnis[7] = falschPositiv;
+        ergebnis[8] = richtigNegativ;
+        ergebnis[9] = falschNegativ;
+        ergebnis[10] = (double)richtigPositiv / (double)(richtigPositiv+falschNegativ);
+        ergebnis[11] = (double)falschPositiv  / (double)(richtigNegativ+falschPositiv);
+
+        System.out.println("Anzahl Muster:  \t" + ergebnis[0]);
+        System.out.println("Anzahl Positiv: \t" + ergebnis[1]);
+        System.out.println("Anzahl Negativ: \t" + ergebnis[2]);
+        System.out.println("Anteil Positiv: \t" + ergebnis[3]);
+        System.out.println("Anteil Negativ: \t" + ergebnis[4]);
+
+        System.out.println("Genauigkeit  :  \t" + ergebnis[5]);
+        System.out.println("Trefferquote:   \t" + ergebnis[10]);
+        System.out.println("Ausfallrate :   \t" + ergebnis[11]);
+
+        System.out.println("richtigPositiv: \t" + ergebnis[6]);
+        System.out.println("falsch Negativ: \t" + ergebnis[9]);
+        System.out.println("richtigNegativ: \t" + ergebnis[8]);
+        System.out.println("falsch Positiv: \t" + ergebnis[7]);
+
+
     }
     
     
