@@ -24,6 +24,7 @@ public class Network {
         int epoche = 0;
         double correct;
         double falsch;
+        System.out.println("Train...");
         do {
         	correct = 0;
             falsch = 0;
@@ -42,8 +43,6 @@ public class Network {
                 }
                 Backward(target);
             }
-            //double n = correct/(correct+falsch);
-            //System.out.println(n);
             epoche++;
         } while (epoche < epochen);
 
