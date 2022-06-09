@@ -2,7 +2,7 @@ import java.util.Arrays;
 
 public class Network {
     static Layer[] layers;
-    static double alpha = 0.5;	//Lernrate
+    static double alpha = 0.3;	//Lernrate
 
     public Network(int InputKnoten, int[] HiddenKnoten, int OutputKnoten) {
         int HiddenLayerAnzahl = HiddenKnoten.length;
@@ -22,25 +22,11 @@ public class Network {
 
     public void train(double[][] Trainingsdaten, int epochen) {
         int epoche = 0;
-        double correct;
-        double falsch;
         System.out.println("Train...");
         do {
-        	correct = 0;
-            falsch = 0;
             for (double[] input : Trainingsdaten) {
-                double[] erg = Forward(input);
+                Forward(input);
                 double[] target = Arrays.copyOfRange(input, input.length-layers[layers.length-1].neuronen.length,input.length);
-                for(int i = 0; i < erg.length; i++) {
-                	//System.out.println(erg[i] + " " + target[i]);
-                	
-                	if (Math.round(erg[i]) == target[i]) {
-                		correct++;
-                	} else {
-                		falsch++;
-                	}
-                	
-                }
                 Backward(target);
             }
             epoche++;
