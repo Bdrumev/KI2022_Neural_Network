@@ -101,7 +101,7 @@ public class Network {
         return (1/(1+Math.exp(-in)))*(1-(1/(1+Math.exp(-in))));
     }
 
-    public void evaluierenDiabetes(double[][] liste) {
+    public void evaluieren(double[][] liste) {
         int falschPositiv  = 0;
         int falschNegativ  = 0;
         int richtigPositiv = 0;
@@ -110,7 +110,7 @@ public class Network {
         int anzahlNegativ  = 0;
         int n = liste[0].length-1;
 
-        double[] ergebnis = new double[12];
+        double[] ergebnis = new double[13];
 
         for (double[] doubles : liste) {
 
@@ -151,6 +151,7 @@ public class Network {
         ergebnis[9] = falschNegativ;
         ergebnis[10] = (double)richtigPositiv / (double)(richtigPositiv+falschNegativ);
         ergebnis[11] = (double)falschPositiv  / (double)(richtigNegativ+falschPositiv);
+        ergebnis[12] = (2*ergebnis[5]*(ergebnis[10]+ergebnis[11]))/(ergebnis[5]+ergebnis[10]+ergebnis[11]);
 
         System.out.println("Anzahl Muster:  \t" + ergebnis[0]);
         System.out.println("Anzahl Positiv: \t" + ergebnis[1]);
@@ -166,6 +167,8 @@ public class Network {
         System.out.println("falsch Negativ: \t" + ergebnis[9]);
         System.out.println("richtigNegativ: \t" + ergebnis[8]);
         System.out.println("falsch Positiv: \t" + ergebnis[7]);
+
+        System.out.println("F-Wert: \t" + ergebnis[12]);
 
 
     }
