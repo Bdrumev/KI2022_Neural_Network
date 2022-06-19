@@ -25,16 +25,16 @@ public class Network {
         System.out.println("Train...");
         do {
             for (double[] input : Trainingsdaten) {
-                Forward(input);
+                FeedForward(input);
                 double[] target = Arrays.copyOfRange(input, input.length-layers[layers.length-1].neuronen.length,input.length);
-                Backward(target);
+                Backpropagation(target);
             }
             epoche++;
         } while (epoche < epochen);
 
     }
 
-    public double[] Forward(double[] input) {
+    public double[] FeedForward(double[] input) {
         double[] output = null;
         Neuron n;
 
@@ -52,7 +52,7 @@ public class Network {
         return output;
     }
 
-    private void Backward(double[] targets) {
+    private void Backpropagation(double[] targets) {
         Layer OutputLayer = layers[layers.length-1];
         int outL = layers.length-1;
         double[][] delta;
@@ -63,7 +63,7 @@ public class Network {
         //Backpropagation OutputLayer
         for(int k = 0; k < OutputLayer.getSize(); k++) {
         	Neuron N = OutputLayer.neuronen[k];
-        	delta[outL][k] = (targets[k] - N.getOutput())*InverseSigmoid(N.Inputs);
+        	delta[outL][k] = (targets[k] - N.getOutput())* Neuron.SigmoidAbleitung(N.Inputs);
         }
         
         //Backpropagation HiddenLayer
@@ -76,7 +76,7 @@ public class Network {
 		        		//im Vorlesung: delta[j] = g'(in[j])*Summe(w[j][k]*delta[k]); k-Knoten i.d. Ausgabeschicht
 		        		sum = delta[L+1][j]*layers[L+1].neuronen[j].weights[i];
 		        	}
-		        	delta[L][i] = InverseSigmoid(layers[L].neuronen[i].Inputs)*sum;
+		        	delta[L][i] = Neuron.SigmoidAbleitung(layers[L].neuronen[i].Inputs)*sum;
 	        	}
         	
         }
@@ -97,10 +97,6 @@ public class Network {
         }
     }
 
-    private double InverseSigmoid(double in) { //g'(x)
-        return (1/(1+Math.exp(-in)))*(1-(1/(1+Math.exp(-in))));
-    }
-
     public void evaluieren(double[][] liste) {
         int falschPositiv  = 0;
         int falschNegativ  = 0;
@@ -114,7 +110,7 @@ public class Network {
 
         for (double[] doubles : liste) {
 
-            double out = Forward(doubles)[0];
+            double out = FeedForward(doubles)[0];
             double y = doubles[n];
 
 

@@ -32,6 +32,11 @@ public class Neuron {
         Output = 1/(1+Math.exp(-in));
         return Output;
     }
+
+    public static double SigmoidAbleitung(double in) { //g'(x)
+        return (1/(1+Math.exp(-in)))*(1-(1/(1+Math.exp(-in))));
+    }
+
     public double getOutput() {
         return Output;
     }
